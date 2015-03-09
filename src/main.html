@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+
+<div>
+this is test request and response's event listener.
+</div>
+
+<script type="text/javascript">
+var MECHAT = {};
+MECHAT.Ajax = {};
+MECHAT.Ajax.createCORSRequest = function() {
+    if (typeof XMLHttpRequest != "undefined") {
+        return new XMLHttpRequest();
+    } else if (typeof ActiveXObject != "undefined") {
+        if (typeof arguments.callee.activeXString != "string") {
+            var versions = ["MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0", "MSXML2.XMLHttp"],
+                i, len;
+            for (i = 0, len = versions.length; i < len; i++) {
+                try {
+                    new ActiveXObject(versions[i]);
+                    arguments.callee.activeXString = versions[i];
+                    break;
+                } catch (ex) {}
+            }
+        }
+        return new ActiveXObject(arguments.callee.activeXString);
+    }
+    return xhr;
+};
+function send(url,data){
+    var xhr = MECHAT.Ajax.createCORSRequest();
+    try {
+        xhr.open('post', url, true);
+        var contet_type = "application/x-www-form-urlencoded; charset=UTF-8";
+        xhr.setRequestHeader("Content-Type", contet_type);
+        xhr.send(data);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    console.log("responseText: ", xhr.responseText);
+                    send("/test","usid:6891");
+                }
+                if (xhr.status == 202) {
+                    send("/test","usid:6891");
+                }
+                console.log("xhr.status", xhr.status);
+            }
+        };
+    } catch (ex) {
+    }
+}
+send("/test","usid:6891");
+</script>
+</body>
+</html>
